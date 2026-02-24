@@ -3,6 +3,7 @@
 package main
 
 import (
+	"fmt"
 	"io"
 	"log"
 	"os"
@@ -158,6 +159,18 @@ func GetSystemActivity() (ActivityInfo, error) {
 		} else if len(parts) > 0 {
 			appName = parts[0]
 		}
+	}
+
+	// 2.5 Obtener PID y Origen
+	pidAtom := getAtom("_NET_WM_PID")
+	pidReply, err := xproto.GetProperty(xConn, false, activeWindow, pidAtom, xproto.GetPropertyTypeAny, 0, 1).Reply()
+
+	var pid int
+	if err == nil && len(pidReply.Value) > 0 {
+		pid = int(xgb.Get32(pidReply.Value))
+		source := IdentifyProcessSource(pid)
+		// Puedes imprimirlo para debug:
+		fmt.Printf("App: %s | Origen: %s | PID: %d\n", appName, source, pid)
 	}
 
 	return ActivityInfo{

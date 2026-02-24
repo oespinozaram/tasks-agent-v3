@@ -51,7 +51,8 @@ func InitDB() *sql.DB {
 
 	// Configuración por defecto si no existe
 	db.Exec("INSERT OR IGNORE INTO agent_config (key, value) VALUES ('idle_threshold_seconds', '300')")
-	defaults := []string{"chrome.exe", "Code.exe", "devenv.exe", "pycharm64.exe", "WindowsTerminal.exe", "Antigravity.exe"}
+	//defaults := []string{"chrome.exe", "Code.exe", "devenv.exe", "pycharm64.exe", "WindowsTerminal.exe", "Antigravity.exe"}
+	defaults := []string{"google-chrome", "code", "gnome-terminal-server", "slack", "antigravity"}
 	for _, app := range defaults {
 		db.Exec("INSERT OR IGNORE INTO monitored_apps (process_name) VALUES (?)", app)
 	}
