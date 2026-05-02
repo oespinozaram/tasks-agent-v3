@@ -166,13 +166,21 @@ func GetSystemActivity() (ActivityInfo, error) {
 	pidReply, err := xproto.GetProperty(xConn, false, activeWindow, pidAtom, xproto.GetPropertyTypeAny, 0, 1).Reply()
 
 	var pid int
+	source := "Unknown"
 	if err == nil && len(pidReply.Value) > 0 {
 		pid = int(xgb.Get32(pidReply.Value))
-		source := IdentifyProcessSource(pid)
-		// Puedes imprimirlo para debug:
-		fmt.Printf("App: %s | Origen: %s | PID: %d\n", appName, source, pid)
+		// Filtro: Si el PID es menor a 10, probablemente es un reporte erróneo de la ventana
+		if pid > 10 {
+			source = IdentifyProcessSource(pid)
+		} else {
+			source = "X11 Property Error"
+		}
 	}
 
+	// Solo imprimir si realmente estamos capturando algo para no saturar la consola
+	if appName != "Desktop" && appName != "Unknown" {
+		fmt.Printf("\r👀 App: %s | Origen: %s | PID: %d          ", appName, source, pid)
+	}
 	return ActivityInfo{
 		AppName:     appName,
 		WindowTitle: title,

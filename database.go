@@ -53,7 +53,7 @@ func InitDB() *sql.DB {
 	db.Exec("INSERT OR IGNORE INTO agent_config (key, value) VALUES ('idle_threshold_seconds', '300')")
 	defaults := []string{
 		// Linux / General
-		"google-chrome", "code", "gnome-terminal-server", "slack", "antigravity",
+		"chrome", "code", "gnome-shell", "slack", "antigravity", "pycharm", "goland",
 		// Windows
 		"chrome.exe", "Code.exe", "devenv.exe", "pycharm64.exe", "WindowsTerminal.exe",
 		// macOS
